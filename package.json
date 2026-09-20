@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build && mkdir -p docs && cp -r dist/* docs/",
+    "build": "git checkout index.html && vite build && mkdir -p docs && cp -r dist/* docs/ && cp dist/index.html ./index.html && cp -r dist/assets/* ./assets/",
     "lint": "oxlint",
     "preview": "vite preview"
   },
