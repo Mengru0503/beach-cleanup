@@ -1,0 +1,130 @@
+@import "tailwindcss";
+
+@theme {
+  --color-sky-pastel: #ADD8E6;
+  --color-ocean-teal: #00CED1;
+  --color-sand-warm: #FDF5E6;
+  --color-bg-light: #F8FAFC;
+  --color-wave: #7DD3FC;
+  --font-family-sans: 'Noto Sans TC', 'Inter', sans-serif;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    background-color: #F8FAFC;
+    font-family: 'Noto Sans TC', 'Inter', sans-serif;
+    color: #1e293b;
+  }
+}
+
+@layer components {
+  .form-label {
+    @apply block text-sm font-semibold text-slate-700 mb-1.5;
+  }
+  .form-input {
+    @apply w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-white text-slate-800 text-sm
+           placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-cyan-400
+           focus:border-cyan-400 transition-all duration-200 shadow-sm hover:border-slate-300;
+  }
+  .form-radio-group {
+    @apply flex flex-wrap gap-3;
+  }
+  .form-radio-label {
+    @apply flex items-center gap-2 px-4 py-2.5 rounded-xl border border-slate-200 bg-white
+           cursor-pointer text-sm text-slate-700 transition-all duration-200
+           hover:border-cyan-400 hover:bg-cyan-50 has-[:checked]:border-cyan-500
+           has-[:checked]:bg-cyan-50 has-[:checked]:text-cyan-700 has-[:checked]:shadow-sm;
+  }
+  .form-section-title {
+    @apply text-base font-bold text-slate-700 border-l-4 border-cyan-400 pl-3 mb-4;
+  }
+  .submit-btn {
+    @apply w-full py-4 rounded-2xl font-bold text-white text-lg tracking-wide
+           bg-gradient-to-r from-cyan-500 to-teal-500
+           shadow-lg shadow-cyan-200 hover:shadow-xl hover:shadow-cyan-300
+           hover:from-cyan-400 hover:to-teal-400
+           active:scale-[0.98] transition-all duration-300
+           disabled:opacity-60 disabled:cursor-not-allowed disabled:scale-100;
+  }
+}
+
+/* Wave animation */
+@keyframes wave-slow {
+  0%, 100% { transform: translateX(0); }
+  50% { transform: translateX(-25%); }
+}
+@keyframes wave-fast {
+  0%, 100% { transform: translateX(0); }
+  50% { transform: translateX(25%); }
+}
+.animate-wave-slow {
+  animation: wave-slow 12s ease-in-out infinite;
+}
+.animate-wave-fast {
+  animation: wave-fast 8s ease-in-out infinite;
+}
+
+/* Fade up animation */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.animate-fade-up {
+  animation: fadeUp 0.8s ease-out forwards;
+}
+.animate-fade-up-delay-1 {
+  animation: fadeUp 0.8s ease-out 0.2s forwards;
+  opacity: 0;
+}
+.animate-fade-up-delay-2 {
+  animation: fadeUp 0.8s ease-out 0.4s forwards;
+  opacity: 0;
+}
+.animate-fade-up-delay-3 {
+  animation: fadeUp 0.8s ease-out 0.6s forwards;
+  opacity: 0;
+}
+
+/* Shimmer loading */
+@keyframes shimmer {
+  from { background-position: -200% center; }
+  to   { background-position: 200% center; }
+}
+.btn-loading {
+  background: linear-gradient(90deg, #06b6d4 25%, #0e7490 50%, #06b6d4 75%);
+  background-size: 200% auto;
+  animation: shimmer 1.5s linear infinite;
+}
+
+/* Success checkmark */
+@keyframes drawCheck {
+  from { stroke-dashoffset: 100; }
+  to   { stroke-dashoffset: 0; }
+}
+.check-draw {
+  stroke-dasharray: 100;
+  stroke-dashoffset: 100;
+  animation: drawCheck 0.6s 0.3s ease-out forwards;
+}
+@keyframes scaleIn {
+  from { transform: scale(0); opacity: 0; }
+  to   { transform: scale(1); opacity: 1; }
+}
+.animate-scale-in {
+  animation: scaleIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+/* Float animation for decoration */
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}
+.animate-float {
+  animation: float 4s ease-in-out infinite;
+}
+.animate-float-delay {
+  animation: float 4s ease-in-out 1s infinite;
+}
