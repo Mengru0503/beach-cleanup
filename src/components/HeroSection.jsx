@@ -4,7 +4,7 @@ export default function HeroSection() {
       id="hero"
       className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden"
       style={{
-        backgroundImage: 'url(/hero-bg.png)',
+        backgroundImage: 'url(hero-bg.png)',
         backgroundSize: 'cover',
         backgroundPosition: 'center',
       }}
