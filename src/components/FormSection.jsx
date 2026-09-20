@@ -17,8 +17,6 @@ const initialForm = {
   referrer: '',
   volunteerHours: '',
   cadreWilling: '',
-  lineStatus: false,
-  willingness: '',
 }
 
 function RadioGroup({ name, value, onChange, options }) {
@@ -75,9 +73,29 @@ function SuccessScreen() {
       <p className="text-slate-600 text-base leading-relaxed mb-2">
         感謝您的參與！
       </p>
-      <p className="text-slate-500 text-sm leading-relaxed max-w-sm mx-auto">
+      <p className="text-slate-500 text-sm leading-relaxed max-w-sm mx-auto mb-6">
         我們已收到您的報名資料。期待當天與您一起淨灘、享用美味蔬食午餐，用行動力愛護海洋！
       </p>
+
+      {/* LINE 群組按鈕區塊 */}
+      <div className="bg-emerald-50/80 border border-emerald-200 rounded-2xl p-5 max-w-md mx-auto space-y-3 shadow-sm">
+        <p className="text-sm font-bold text-emerald-900 leading-relaxed">
+          🎉 請點擊下方按鈕加入淨灘服務 LINE 群組
+        </p>
+        <p className="text-xs text-emerald-700">
+          活動最新消息、集合提醒及現場聯繫皆會在群組內發布喔！
+        </p>
+        <div className="pt-1">
+          <a
+            href={LINE_GROUP_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center justify-center gap-2 bg-[#06C755] hover:bg-[#05b34c] text-white font-bold text-base px-6 py-3 rounded-xl shadow-md transition-all duration-200 hover:shadow-lg hover:scale-105 active:scale-95"
+          >
+            加入淨灘服務 LINE 群組
+          </a>
+        </div>
+      </div>
     </div>
   )
 }
@@ -106,8 +124,6 @@ export default function FormSection() {
     if (!form.referrer.trim()) errs.referrer = '請填寫介紹人（無請填「無」）'
     if (!form.volunteerHours) errs.volunteerHours = '請選擇是否申請志工服務時數'
     if (!form.cadreWilling) errs.cadreWilling = '請選擇是否願意擔任現場幹部'
-    // lineStatus 為選填（不強制勾選）
-    if (!form.willingness) errs.willingness = '請選擇是否願意求道開智慧'
     return errs
   }
 
@@ -132,7 +148,6 @@ export default function FormSection() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           ...form,
-          lineStatus: form.lineStatus ? '是' : '否',
           submittedAt: new Date().toISOString(),
         }),
       })
@@ -388,64 +403,6 @@ export default function FormSection() {
                     />
                     {errors.cadreWilling && (
                       <p className="text-red-500 text-xs mt-1">{errors.cadreWilling}</p>
-                    )}
-                  </div>
-                </div>
-              </div>
-
-              {/* ── Section 5: 其他事項 & LINE 群組 ── */}
-              <div>
-                <p className="form-section-title">其他事項</p>
-                <div className="space-y-6">
-
-                  {/* LINE 群組區塊（非強制填寫） */}
-                  <div id="field-lineStatus" className="bg-emerald-50/70 border border-emerald-200/80 rounded-xl p-4 space-y-3">
-                    <p className="text-sm font-semibold text-emerald-900 leading-relaxed">
-                      承上題，請按鈕加入淨灘服務群組 (有疑問請在群組留言，夥伴會盡速與您聯繫)
-                    </p>
-                    
-                    <div>
-                      <a
-                        href={LINE_GROUP_URL}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center justify-center gap-2 bg-[#06C755] hover:bg-[#05b34c] text-white font-bold text-sm px-5 py-2.5 rounded-xl shadow-sm transition-all duration-200 hover:shadow"
-                      >
-                        加入淨灘服務 LINE 群組
-                      </a>
-                    </div>
-
-                    <label
-                      htmlFor="checkbox-lineStatus"
-                      className="flex items-center gap-3 cursor-pointer pt-1"
-                    >
-                      <input
-                        id="checkbox-lineStatus"
-                        type="checkbox"
-                        className="w-4 h-4 rounded border-slate-300 text-emerald-600 focus:ring-emerald-500"
-                        checked={form.lineStatus}
-                        onChange={(e) => setField('lineStatus', e.target.checked)}
-                      />
-                      <span className="text-sm font-medium text-slate-700">已加入淨灘群組（選填）</span>
-                    </label>
-                  </div>
-
-                  {/* willingness */}
-                  <div id="field-willingness">
-                    <label className="form-label">
-                      是否願意求道開智慧 <span className="text-red-500">*</span>
-                    </label>
-                    <RadioGroup
-                      name="willingness"
-                      value={form.willingness}
-                      onChange={(v) => setField('willingness', v)}
-                      options={[
-                        { value: '是', label: '是' },
-                        { value: '否', label: '否' },
-                      ]}
-                    />
-                    {errors.willingness && (
-                      <p className="text-red-500 text-xs mt-1">{errors.willingness}</p>
                     )}
                   </div>
                 </div>
