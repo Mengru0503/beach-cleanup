@@ -8,8 +8,8 @@ export default defineConfig({
     react(),
     tailwindcss(),
   ],
-  base: '/beach-cleanup/',
+  base: './',
   build: {
-    outDir: 'docs',
+    outDir: 'dist',
   },
 })
