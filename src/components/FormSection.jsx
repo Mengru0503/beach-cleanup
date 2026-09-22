@@ -115,12 +115,35 @@ export default function FormSection() {
     const errs = {}
     if (!form.isMember) errs.isMember = '請選擇是否為道親'
     if (!form.name.trim()) errs.name = '請填寫姓名'
-    if (!form.phone.trim()) errs.phone = '請填寫聯絡電話'
-    if (!form.idNumber.trim()) errs.idNumber = '請填寫身分證字號（僅作為保險使用）'
+
+    // 聯絡電話驗證（需為 10 位數字，09 開頭）
+    const cleanPhone = form.phone.trim()
+    if (!cleanPhone) {
+      errs.phone = '請填寫聯絡電話'
+    } else if (!/^09\d{8}$/.test(cleanPhone)) {
+      errs.phone = '手機號碼格式不正確（需為 10 位數字，例如：0912345678）'
+    }
+
+    // 身分證字號驗證（1 位英文字母加 9 位數字）
+    const cleanId = form.idNumber.trim().toUpperCase()
+    if (!cleanId) {
+      errs.idNumber = '請填寫身分證字號（僅作為保險使用）'
+    } else if (!/^[A-Z][1289]\d{8}$|^[A-Z]\d{9}$/.test(cleanId)) {
+      errs.idNumber = '身分證字號格式不正確（需為 1 位英文字母加 9 位數字，例如：A123456789）'
+    }
+
     if (!form.birthday) errs.birthday = '請選擇生日'
     if (!form.transport) errs.transport = '請選擇交通方式'
     if (!form.emergencyName.trim()) errs.emergencyName = '請填寫緊急聯絡人姓名'
-    if (!form.emergencyPhone.trim()) errs.emergencyPhone = '請填寫緊急聯絡電話'
+
+    // 緊急聯絡電話驗證（需為 9 至 10 位數字）
+    const cleanEmergencyPhone = form.emergencyPhone.trim()
+    if (!cleanEmergencyPhone) {
+      errs.emergencyPhone = '請填寫緊急聯絡電話'
+    } else if (!/^0\d{8,9}$/.test(cleanEmergencyPhone)) {
+      errs.emergencyPhone = '緊急聯絡電話格式不正確（需為 9 至 10 位數字，例如：0912345678）'
+    }
+
     if (!form.referrer.trim()) errs.referrer = '請填寫介紹人（無請填「無」）'
     if (!form.volunteerHours) errs.volunteerHours = '請選擇是否申請志工服務時數'
     if (!form.cadreWilling) errs.cadreWilling = '請選擇是否願意擔任現場幹部'
@@ -148,6 +171,8 @@ export default function FormSection() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           ...form,
+          phone: `'${form.phone}`,
+          emergencyPhone: `'${form.emergencyPhone}`,
           submittedAt: new Date().toISOString(),
         }),
       })
@@ -236,9 +261,13 @@ export default function FormSection() {
                       id="input-phone"
                       type="tel"
                       className="form-input"
-                      placeholder="例如：0912-345-678"
+                      placeholder="例如：0912345678"
+                      maxLength={10}
                       value={form.phone}
-                      onChange={(e) => setField('phone', e.target.value)}
+                      onChange={(e) => {
+                        const val = e.target.value.replace(/\D/g, '').slice(0, 10)
+                        setField('phone', val)
+                      }}
                     />
                     {errors.phone && (
                       <p className="text-red-500 text-xs mt-1">{errors.phone}</p>
@@ -254,10 +283,14 @@ export default function FormSection() {
                       <input
                         id="input-idNumber"
                         type="text"
-                        className="form-input"
-                        placeholder="僅作為保險使用"
+                        className="form-input uppercase"
+                        placeholder="例如：A123456789"
+                        maxLength={10}
                         value={form.idNumber}
-                        onChange={(e) => setField('idNumber', e.target.value)}
+                        onChange={(e) => {
+                          const val = e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 10)
+                          setField('idNumber', val)
+                        }}
                       />
                       {errors.idNumber && (
                         <p className="text-red-500 text-xs mt-1">{errors.idNumber}</p>
@@ -333,9 +366,13 @@ export default function FormSection() {
                         id="input-emergencyPhone"
                         type="tel"
                         className="form-input"
-                        placeholder="緊急聯絡電話"
+                        placeholder="例如：0912345678"
+                        maxLength={10}
                         value={form.emergencyPhone}
-                        onChange={(e) => setField('emergencyPhone', e.target.value)}
+                        onChange={(e) => {
+                          const val = e.target.value.replace(/\D/g, '').slice(0, 10)
+                          setField('emergencyPhone', val)
+                        }}
                       />
                       {errors.emergencyPhone && (
                         <p className="text-red-500 text-xs mt-1">{errors.emergencyPhone}</p>
@@ -397,7 +434,6 @@ export default function FormSection() {
                       options={[
                         { value: '是，我可以協助擔任現場幹部', label: '是，我可以協助擔任現場幹部' },
                         { value: '是，我可以協助廚務工作', label: '是，我可以協助廚務工作' },
-                        { value: '否，我是為了申請志工時數', label: '否，我是為了申請志工時數' },
                         { value: '否', label: '否' },
                       ]}
                     />
