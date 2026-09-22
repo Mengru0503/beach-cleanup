@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build && rm -rf docs && cp -r dist docs && mkdir -p assets && cp -r dist/assets/* ./assets/",
+    "deploy": "gh-pages -d dist",
+    "build": "vite build",
     "lint": "oxlint",
     "preview": "vite preview"
   },
