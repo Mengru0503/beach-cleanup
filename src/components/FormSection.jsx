@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { verifyIdentityNumber } from '../utils/idValidator'
 
 const API_URL =
   'https://script.google.com/macros/s/AKfycbwskaVr_IEpLD9TprQss1drXe8dx44ggBH5iX8bNaYwoPVHNnoFlkTUqFdizn38__KQ1w/exec'
@@ -111,6 +112,9 @@ export default function FormSection() {
     setErrors((prev) => ({ ...prev, [key]: undefined }))
   }
 
+  // 即時身分證 / 居留證辨識狀態
+  const idStatus = form.idNumber.trim().length === 10 ? verifyIdentityNumber(form.idNumber) : null
+
   const validate = () => {
     const errs = {}
     if (!form.isMember) errs.isMember = '請選擇是否為道親'
@@ -124,12 +128,10 @@ export default function FormSection() {
       errs.phone = '手機號碼格式不正確（需為 10 位數字，例如：0912345678）'
     }
 
-    // 身分證字號驗證（1 位英文字母加 9 位數字）
-    const cleanId = form.idNumber.trim().toUpperCase()
-    if (!cleanId) {
-      errs.idNumber = '請填寫身分證字號（僅作為保險使用）'
-    } else if (!/^[A-Z][1289]\d{8}$|^[A-Z]\d{9}$/.test(cleanId)) {
-      errs.idNumber = '身分證字號格式不正確（需為 1 位英文字母加 9 位數字，例如：A123456789）'
+    // 身分證字號 / 居留證號碼驗證（嚴格加權檢查碼檢核，事關活動保險）
+    const idCheck = verifyIdentityNumber(form.idNumber)
+    if (!idCheck.valid) {
+      errs.idNumber = idCheck.message
     }
 
     if (!form.birthday) errs.birthday = '請選擇生日'
@@ -171,6 +173,7 @@ export default function FormSection() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           ...form,
+          idNumber: form.idNumber.trim().toUpperCase(),
           phone: `'${form.phone}`,
           emergencyPhone: `'${form.emergencyPhone}`,
           submittedAt: new Date().toISOString(),
@@ -278,13 +281,19 @@ export default function FormSection() {
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div id="field-idNumber">
                       <label htmlFor="input-idNumber" className="form-label">
-                        身分證字號 <span className="text-red-500">*</span>
+                        身分證字號 / 居留證號碼 <span className="text-red-500">*</span>
                       </label>
                       <input
                         id="input-idNumber"
                         type="text"
-                        className="form-input uppercase"
-                        placeholder="例如：A123456789"
+                        className={`form-input uppercase ${
+                          idStatus?.valid
+                            ? '!border-emerald-400 focus:!border-emerald-500 focus:!ring-emerald-200'
+                            : errors.idNumber
+                            ? '!border-red-400'
+                            : ''
+                        }`}
+                        placeholder="例如：A123456789 或 居留證號"
                         maxLength={10}
                         value={form.idNumber}
                         onChange={(e) => {
@@ -292,8 +301,23 @@ export default function FormSection() {
                           setField('idNumber', val)
                         }}
                       />
-                      {errors.idNumber && (
+                      {/* 即時辨識成功提示 */}
+                      {idStatus?.valid && !errors.idNumber && (
+                        <div className="flex items-center gap-1.5 mt-1.5 text-emerald-700 bg-emerald-50 border border-emerald-200/80 rounded-lg px-2.5 py-1 text-xs font-medium animate-fadeIn">
+                          <svg className="w-3.5 h-3.5 flex-shrink-0 text-emerald-600" fill="currentColor" viewBox="0 0 20 20">
+                            <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                          </svg>
+                          <span>已通過檢核：{idStatus.label}</span>
+                        </div>
+                      )}
+                      {errors.idNumber ? (
                         <p className="text-red-500 text-xs mt-1">{errors.idNumber}</p>
+                      ) : (
+                        !idStatus?.valid && (
+                          <p className="text-slate-400 text-xs mt-1">
+                            支援台灣身分證及外僑/港澳居留證（保險核保專用）
+                          </p>
+                        )
                       )}
                     </div>
                     <div id="field-birthday">
