@@ -101,7 +101,93 @@ function SuccessScreen() {
   )
 }
 
-export default function FormSection() {
+// 報名狀態開關：關閉報名時設為 true
+const IS_REGISTRATION_CLOSED = true
+
+function RegistrationClosedSection() {
+  return (
+    <section id="signup" className="py-16 px-4 bg-gradient-to-b from-[#F8FAFC] to-slate-100">
+      <div className="max-w-2xl mx-auto">
+        {/* Section header */}
+        <div className="text-center mb-10">
+          <span className="inline-block bg-amber-100 text-amber-800 text-xs font-semibold
+                           px-3.5 py-1 rounded-full mb-3 border border-amber-200">
+            報名已截止
+          </span>
+          <h2 className="text-2xl md:text-3xl font-bold text-slate-800 mb-2">
+            活動即將開始
+          </h2>
+          <p className="text-slate-500 text-sm">
+            感謝大家的熱烈響應與愛護海洋的心
+          </p>
+        </div>
+
+        {/* Closed Announcement Card */}
+        <div className="bg-white rounded-3xl shadow-sm border border-slate-200/80 p-8 sm:p-12 text-center overflow-hidden relative">
+          {/* Subtle background glow */}
+          <div className="absolute -top-16 -right-16 w-40 h-40 bg-cyan-100/40 rounded-full blur-2xl pointer-events-none" />
+          <div className="absolute -bottom-16 -left-16 w-40 h-40 bg-teal-100/40 rounded-full blur-2xl pointer-events-none" />
+
+          {/* Icon */}
+          <div className="relative mx-auto w-20 h-20 mb-6 rounded-2xl bg-gradient-to-tr from-cyan-600 to-teal-500 flex items-center justify-center shadow-lg shadow-cyan-600/20 text-white">
+            <svg className="w-10 h-10" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+            </svg>
+          </div>
+
+          <span className="inline-block bg-cyan-50 text-cyan-800 text-xs font-bold tracking-wider px-3.5 py-1 rounded-full mb-3 border border-cyan-200">
+            NEXT STAGE
+          </span>
+
+          <h3 className="text-3xl sm:text-4xl font-black text-slate-800 mb-4 tracking-tight">
+            明年三月敬請期待
+          </h3>
+
+          <p className="text-slate-600 text-base sm:text-lg leading-relaxed mb-8 max-w-lg mx-auto">
+            本次淨灘活動即將開始，線上報名已正式截止。<br className="hidden sm:inline" />
+            非常感謝大家對守護海洋的熱情！<br />
+            下一次淨灘活動預計於 <span className="font-bold text-teal-700">明年三月</span> 舉辦，敬請期待！
+          </p>
+
+          {/* Reminder info box */}
+          <div className="bg-slate-50 rounded-2xl p-5 border border-slate-200/70 mb-8 text-left space-y-2.5">
+            <div className="flex items-center gap-2 text-slate-800 font-bold text-sm">
+              <svg className="w-4 h-4 text-cyan-600 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              <span>已報名夥伴提醒</span>
+            </div>
+            <ul className="text-xs sm:text-sm text-slate-600 space-y-1.5 list-disc list-inside">
+              <li>活動即將開始，請確認集合時間（7:30 圓山站搭車 / 9:00 自行前往集合）與交通方式。</li>
+              <li>最新消息、集合細節與行前通知皆會在志工 LINE 群組內發布。</li>
+              <li>若需確認或更動報名資訊，歡迎隨時聯繫活動聯絡人。</li>
+            </ul>
+          </div>
+
+          {/* Action buttons */}
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
+            <a
+              href="#why"
+              className="w-full sm:w-auto inline-flex items-center justify-center bg-cyan-600 hover:bg-cyan-700 text-white font-bold text-sm px-6 py-3 rounded-xl transition-all shadow-sm hover:shadow"
+            >
+              查看活動細節與聯絡人
+            </a>
+            <a
+              href={LINE_GROUP_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-[#06C755] hover:bg-[#05b34c] text-white font-bold text-sm px-6 py-3 rounded-xl transition-all shadow-sm hover:shadow"
+            >
+              加入淨灘 LINE 群組
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+  )
+}
+
+function ActiveRegistrationForm() {
   const [form, setForm] = useState(initialForm)
   const [loading, setLoading] = useState(false)
   const [submitted, setSubmitted] = useState(false)
@@ -510,4 +596,12 @@ export default function FormSection() {
       </div>
     </section>
   )
+}
+
+export default function FormSection() {
+  if (IS_REGISTRATION_CLOSED) {
+    return <RegistrationClosedSection />
+  }
+
+  return <ActiveRegistrationForm />
 }

@@ -29,16 +29,27 @@ const buildSyncPlugin = () => ({
   closeBundle() {
     const distTemplate = path.resolve(__dirname, 'dist/template.html')
     const distIndex = path.resolve(__dirname, 'dist/index.html')
+    const dist404 = path.resolve(__dirname, 'dist/404.html')
     const rootIndex = path.resolve(__dirname, 'index.html')
+    const root404 = path.resolve(__dirname, '404.html')
     const docsDir = path.resolve(__dirname, 'docs')
     const docsIndex = path.resolve(__dirname, 'docs/index.html')
+    const docs404 = path.resolve(__dirname, 'docs/404.html')
 
     if (fs.existsSync(distTemplate)) {
       const htmlContent = fs.readFileSync(distTemplate, 'utf8')
       fs.writeFileSync(distIndex, htmlContent)
+      fs.writeFileSync(dist404, htmlContent)
       fs.writeFileSync(rootIndex, htmlContent)
+      fs.writeFileSync(root404, htmlContent)
       fs.mkdirSync(docsDir, { recursive: true })
       fs.writeFileSync(docsIndex, htmlContent)
+      fs.writeFileSync(docs404, htmlContent)
+
+      const publicDir = path.resolve(__dirname, 'public')
+      if (fs.existsSync(publicDir)) {
+        fs.cpSync(publicDir, docsDir, { recursive: true })
+      }
     }
 
     const distAssetsDir = path.resolve(__dirname, 'dist/assets')

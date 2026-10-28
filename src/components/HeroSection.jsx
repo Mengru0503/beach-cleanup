@@ -44,11 +44,14 @@ export default function HeroSection() {
           <a
             href="#signup"
             id="hero-cta-btn"
-            className="inline-flex items-center justify-center bg-white text-cyan-700 font-bold text-lg
-                       px-8 py-4 rounded-2xl shadow-2xl hover:bg-cyan-50 hover:scale-105
-                       active:scale-95 transition-all duration-300"
+            className="inline-flex items-center justify-center bg-white/95 text-slate-800 font-bold text-lg
+                       px-8 py-4 rounded-2xl shadow-2xl hover:bg-white hover:scale-105
+                       active:scale-95 transition-all duration-300 gap-2.5"
           >
-            立即報名
+            <span>報名已截止</span>
+            <span className="text-xs bg-amber-100 text-amber-800 font-bold px-3 py-1 rounded-full">
+              明年三月敬請期待
+            </span>
           </a>
         </div>
       </div>
